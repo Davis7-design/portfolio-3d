@@ -192,31 +192,40 @@ function draw() {
   ctx.rotate(player.angle);
 
   if (player.vehicle === 'car') {
+    // Bigger clearer car
     ctx.fillStyle = '#00f0ff';
-    ctx.fillRect(-16, -10, 32, 20);
-    ctx.fillStyle = '#0088aa';
-    ctx.fillRect(-10, -7, 14, 14);
-    ctx.fillStyle = '#ffff88';
-    ctx.fillRect(12, -7, 5, 5);
-    ctx.fillRect(12, 2, 5, 5);
+    ctx.fillRect(-22, -14, 44, 28);
+    ctx.fillStyle = '#007a99';
+    ctx.fillRect(-12, -10, 18, 20);
+    // lights
+    ctx.fillStyle = '#ffff66';
+    ctx.fillRect(16, -10, 8, 8);
+    ctx.fillRect(16, 2, 8, 8);
+    // wheels
+    ctx.fillStyle = '#111';
+    ctx.fillRect(-18, -18, 10, 6);
+    ctx.fillRect(-18, 12, 10, 6);
+    ctx.fillRect(8, -18, 10, 6);
+    ctx.fillRect(8, 12, 10, 6);
   } else {
+    // Bigger boat
     ctx.fillStyle = '#ff6b35';
     ctx.beginPath();
-    ctx.moveTo(18, 0);
-    ctx.lineTo(-14, -12);
-    ctx.lineTo(-10, 0);
-    ctx.lineTo(-14, 12);
+    ctx.moveTo(26, 0);
+    ctx.lineTo(-18, -16);
+    ctx.lineTo(-12, 0);
+    ctx.lineTo(-18, 16);
     ctx.closePath();
     ctx.fill();
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(-6, -5, 10, 10);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(-8, -8, 14, 16);
   }
   ctx.restore();
 
   ctx.beginPath();
-  ctx.arc(player.x, player.y, 26, 0, Math.PI * 2);
-  ctx.strokeStyle = player.vehicle === 'car' ? 'rgba(0,240,255,0.3)' : 'rgba(255,107,53,0.3)';
-  ctx.lineWidth = 2;
+  ctx.arc(player.x, player.y, 38, 0, Math.PI * 2);
+  ctx.strokeStyle = player.vehicle === 'car' ? 'rgba(0,240,255,0.4)' : 'rgba(255,107,53,0.4)';
+  ctx.lineWidth = 3;
   ctx.stroke();
 
   ctx.restore();

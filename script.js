@@ -9,8 +9,8 @@ const MAP_W = 2400;
 const MAP_H = 1600;
 
 const player = {
-  x: 400,
-  y: 400,
+  x: 280,
+  y: 280,
   angle: 0,
   speed: 0,
   maxSpeed: 4.5,
@@ -31,6 +31,8 @@ const zones = [
 ];
 
 let currentZone = null;
+let canOpenPanel = false;
+setTimeout(() => { canOpenPanel = true; }, 1800);
 
 function resize() {
   width = window.innerWidth;
@@ -121,7 +123,7 @@ function update() {
       break;
     }
   }
-  if (found && found !== currentZone) {
+  if (found && found !== currentZone && canOpenPanel) {
     currentZone = found;
     openPanel(found.id);
   } else if (!found && currentZone) {
@@ -221,7 +223,7 @@ function draw() {
 }
 
 const contents = {
-  home: `<img src="photo_axel.png" alt="Photo" class="photo" onerror="this.style.display='none'"><h2>KOUASSI KOFFI DEVIS AXEL HEROLDE</h2><p class="subtitle">BTS Informatique Développeur d'Applications (IDA) · 2026</p><p>Bienvenue sur mon portfolio interactif ! Explore la map avec la voiture sur la terre et le bateau sur l'eau.</p><p>Approche-toi des zones colorées pour découvrir mon parcours, mes compétences et mes projets.</p>`,
+  home: `<h2>KOUASSI KOFFI DEVIS AXEL HEROLDE</h2><p class="subtitle">BTS Informatique Développeur d'Applications (IDA) · 2026</p><p>Bienvenue sur mon portfolio interactif ! Explore la map avec la voiture sur la terre et le bateau sur l'eau.</p><p>Approche-toi des zones colorées pour découvrir mon parcours, mes compétences et mes projets.</p>`,
   about: `<h2>À propos de moi</h2><p class="subtitle">Jeune diplômé · Recherche de stage</p><p>Jeune diplômé titulaire d'un BTS en Informatique Développeur d'Applications (IDA) obtenu en 2026, je suis actuellement à la recherche d'un stage afin d'acquérir une première expérience professionnelle.</p><p>Sérieux, motivé et désireux d'apprendre, je souhaite intégrer une structure pour mettre en pratique mes connaissances et développer mes compétences techniques.</p><p><strong>Qualités :</strong> Sérieux • Ponctuel • Motivé • Discret • Dynamique • Apprenant rapide</p>`,
   skills: `<h2>Compétences</h2><p class="subtitle">Techniques & Transversales</p><h3 style="color:#00f0ff;margin:1rem 0 0.5rem;font-size:1rem;">Techniques</h3><div class="skill-list"><span class="skill-item">HTML5 / CSS3 <small>Intermédiaire</small></span><span class="skill-item">JavaScript <small>Débutant</small></span><span class="skill-item">Bootstrap <small>Débutant</small></span><span class="skill-item">Git & GitHub <small>Débutant</small></span><span class="skill-item">MySQL <small>Intermédiaire</small></span><span class="skill-item">Responsive Design <small>Débutant</small></span></div><h3 style="color:#a855f7;margin:1.2rem 0 0.5rem;font-size:1rem;">IA & Outils</h3><div class="skill-list"><span class="skill-item">ChatGPT</span><span class="skill-item">Claude</span><span class="skill-item">Gemini</span><span class="skill-item">DeepSeek</span><span class="skill-item">GitHub Copilot</span><span class="skill-item">Perplexity</span></div>`,
   projects: `<h2>Projets</h2><p class="subtitle">Projets académiques & personnels</p><p><strong>🛒 Davisshop</strong><br>Plateforme e-commerce (React + Node + Prisma)</p><p><strong>🚗 Site de vente de voitures</strong><br>HTML/CSS, JS, MySQL (projet BTS local)</p><p><strong>🌐 Portfolio Map Interactive</strong><br>Ce portfolio unique avec navigation véhicule</p><p><strong>🇨🇮 Quiz-Ivoire</strong><br>Quiz culture générale Côte d'Ivoire</p>`,

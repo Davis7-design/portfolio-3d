@@ -1,57 +1,198 @@
-// ===== PORTFOLIO MAP INTERACTIVE =====
-// Car on land, Boat on water + smooth panel transitions
+// ===== AXEL 3D PORTFOLIO MAP =====
+// Three.js - Car on land, Boat on water
 
-const canvas = document.getElementById('mapCanvas');
-const ctx = canvas.getContext('2d');
+const container = document.getElementById('canvas-container');
 
-let width, height;
-const MAP_W = 2400;
-const MAP_H = 1600;
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x87ceeb);
+scene.fog = new THREE.Fog(0x87ceeb, 80, 280);
 
-const player = {
-  x: 280,
-  y: 280,
-  angle: 0,
-  speed: 0,
-  maxSpeed: 4.5,
-  vehicle: 'car',
-  radius: 18
-};
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 500);
+camera.position.set(0, 25, 35);
 
-const keys = {};
-const mobileDir = { up: false, down: false, left: false, right: false };
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+container.appendChild(renderer.domElement);
 
-const zones = [
-  { x: 380, y: 380, r: 90, id: 'home', label: 'ACCUEIL', color: '#00f0ff' },
-  { x: 900, y: 320, r: 85, id: 'about', label: 'À PROPOS', color: '#ff2d95' },
-  { x: 1500, y: 450, r: 85, id: 'skills', label: 'COMPÉTENCES', color: '#a855f7' },
-  { x: 700, y: 900, r: 90, id: 'projects', label: 'PROJETS', color: '#22d3ee' },
-  { x: 1600, y: 1000, r: 90, id: 'contact', label: 'CONTACT', color: '#f472b6' },
-  { x: 1100, y: 700, r: 70, id: 'cv', label: 'CV', color: '#34d399' }
+const ambient = new THREE.AmbientLight(0xffffff, 0.55);
+scene.add(ambient);
+
+const sun = new THREE.DirectionalLight(0xfff5e0, 1.1);
+sun.position.set(60, 80, 40);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+sun.shadow.camera.near = 10;
+sun.shadow.camera.far = 200;
+sun.shadow.camera.left = -80;
+sun.shadow.camera.right = 80;
+sun.shadow.camera.top = 80;
+sun.shadow.camera.bottom = -80;
+scene.add(sun);
+
+const hemi = new THREE.HemisphereLight(0x87ceeb, 0x3a5f0b, 0.35);
+scene.add(hemi);
+
+const MAP_SIZE = 200;
+const landGeo = new THREE.PlaneGeometry(MAP_SIZE, MAP_SIZE, 64, 64);
+const pos = landGeo.attributes.position;
+for (let i = 0; i < pos.count; i++) {
+  const x = pos.getX(i);
+  const y = pos.getY(i);
+  let h = Math.sin(x * 0.04) * Math.cos(y * 0.035) * 2.5;
+  h += Math.sin(x * 0.09 + y * 0.07) * 1.2;
+  pos.setZ(i, h);
+}
+landGeo.computeVertexNormals();
+
+const landMat = new THREE.MeshStandardMaterial({
+  color: 0x3d8b37,
+  roughness: 0.85,
+  metalness: 0.05
+});
+const land = new THREE.Mesh(landGeo, landMat);
+land.rotation.x = -Math.PI / 2;
+land.receiveShadow = true;
+scene.add(land);
+
+const waterGeo = new THREE.PlaneGeometry(MAP_SIZE * 1.2, MAP_SIZE * 1.2);
+const waterMat = new THREE.MeshStandardMaterial({
+  color: 0x1a6fb5,
+  transparent: true,
+  opacity: 0.85,
+  roughness: 0.2,
+  metalness: 0.3
+});
+const water = new THREE.Mesh(waterGeo, waterMat);
+water.rotation.x = -Math.PI / 2;
+water.position.y = -1.8;
+scene.add(water);
+
+function addRoad(x1, z1, x2, z2, width = 4) {
+  const len = Math.hypot(x2 - x1, z2 - z1);
+  const geo = new THREE.PlaneGeometry(width, len);
+  const mat = new THREE.MeshStandardMaterial({ color: 0x333333, roughness: 0.9 });
+  const road = new THREE.Mesh(geo, mat);
+  road.rotation.x = -Math.PI / 2;
+  road.position.set((x1 + x2) / 2, 0.15, (z1 + z2) / 2);
+  road.rotation.z = Math.atan2(x2 - x1, z2 - z1);
+  road.receiveShadow = true;
+  scene.add(road);
+}
+addRoad(-40, -40, 40, -40);
+addRoad(0, -40, 0, 40);
+addRoad(-40, 20, 50, 20);
+
+const car = new THREE.Group();
+const carBody = new THREE.Mesh(
+  new THREE.BoxGeometry(4.2, 1.2, 2.2),
+  new THREE.MeshStandardMaterial({ color: 0x00d4ff, metalness: 0.6, roughness: 0.3 })
+);
+carBody.position.y = 0.9;
+carBody.castShadow = true;
+car.add(carBody);
+const cabin = new THREE.Mesh(
+  new THREE.BoxGeometry(2.2, 1.0, 1.9),
+  new THREE.MeshStandardMaterial({ color: 0x007a99, metalness: 0.4, roughness: 0.3 })
+);
+cabin.position.set(-0.3, 1.7, 0);
+cabin.castShadow = true;
+car.add(cabin);
+const winMat = new THREE.MeshStandardMaterial({ color: 0x88e0ff, transparent: true, opacity: 0.7 });
+const win = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.7, 1.95), winMat);
+win.position.set(-0.3, 1.75, 0);
+car.add(win);
+const wheelGeo = new THREE.CylinderGeometry(0.45, 0.45, 0.35, 16);
+const wheelMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.8 });
+[[1.3, 0.45, 1.15], [1.3, 0.45, -1.15], [-1.4, 0.45, 1.15], [-1.4, 0.45, -1.15]].forEach(([x, y, z]) => {
+  const w = new THREE.Mesh(wheelGeo, wheelMat);
+  w.rotation.z = Math.PI / 2;
+  w.position.set(x, y, z);
+  w.castShadow = true;
+  car.add(w);
+});
+const lightMat = new THREE.MeshStandardMaterial({ color: 0xffffaa, emissive: 0xffff66, emissiveIntensity: 0.6 });
+[[1.9, 1.0, 0.7], [1.9, 1.0, -0.7]].forEach(([x, y, z]) => {
+  const l = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.3, 0.35), lightMat);
+  l.position.set(x, y, z);
+  car.add(l);
+});
+car.position.set(-20, 0, -20);
+scene.add(car);
+
+const boat = new THREE.Group();
+const hull = new THREE.Mesh(
+  new THREE.BoxGeometry(5, 1.0, 2.2),
+  new THREE.MeshStandardMaterial({ color: 0xff5c2e, metalness: 0.3, roughness: 0.4 })
+);
+hull.position.y = 0.4;
+hull.castShadow = true;
+boat.add(hull);
+const bow = new THREE.Mesh(
+  new THREE.ConeGeometry(1.1, 2.2, 4),
+  new THREE.MeshStandardMaterial({ color: 0xff5c2e, metalness: 0.3, roughness: 0.4 })
+);
+bow.rotation.z = -Math.PI / 2;
+bow.position.set(2.8, 0.4, 0);
+boat.add(bow);
+const boatCabin = new THREE.Mesh(
+  new THREE.BoxGeometry(1.8, 1.3, 1.6),
+  new THREE.MeshStandardMaterial({ color: 0xffffff })
+);
+boatCabin.position.set(-0.3, 1.3, 0);
+boatCabin.castShadow = true;
+boat.add(boatCabin);
+const boatWin = new THREE.Mesh(
+  new THREE.BoxGeometry(1.5, 0.9, 1.65),
+  new THREE.MeshStandardMaterial({ color: 0x88ccff, transparent: true, opacity: 0.75 })
+);
+boatWin.position.set(-0.3, 1.4, 0);
+boat.add(boatWin);
+boat.visible = false;
+boat.position.set(30, -1.2, 30);
+scene.add(boat);
+
+const zonesData = [
+  { x: -20, z: -20, r: 8, id: 'home', label: 'ACCUEIL', color: 0x00f0ff },
+  { x: 25, z: -25, r: 8, id: 'about', label: 'À PROPOS', color: 0xff2d95 },
+  { x: 40, z: 15, r: 8, id: 'skills', label: 'COMPÉTENCES', color: 0xa855f7 },
+  { x: -30, z: 30, r: 8, id: 'projects', label: 'PROJETS', color: 0x22d3ee },
+  { x: 10, z: 45, r: 8, id: 'contact', label: 'CONTACT', color: 0xf472b6 },
+  { x: 0, z: 0, r: 7, id: 'cv', label: 'CV', color: 0x34d399 }
 ];
 
+zonesData.forEach(z => {
+  const ring = new THREE.Mesh(
+    new THREE.RingGeometry(z.r - 0.8, z.r, 32),
+    new THREE.MeshBasicMaterial({ color: z.color, side: THREE.DoubleSide, transparent: true, opacity: 0.7 })
+  );
+  ring.rotation.x = -Math.PI / 2;
+  ring.position.set(z.x, 0.3, z.z);
+  scene.add(ring);
+
+  const glow = new THREE.Mesh(
+    new THREE.CircleGeometry(z.r, 32),
+    new THREE.MeshBasicMaterial({ color: z.color, transparent: true, opacity: 0.12, side: THREE.DoubleSide })
+  );
+  glow.rotation.x = -Math.PI / 2;
+  glow.position.set(z.x, 0.2, z.z);
+  scene.add(glow);
+});
+
+let currentVehicle = 'car';
+let speed = 0;
+const maxSpeed = 0.55;
+const keys = {};
+const mobileDir = { up: false, down: false, left: false, right: false };
 let currentZone = null;
 let canOpenPanel = false;
-setTimeout(() => { canOpenPanel = true; }, 1800);
-
-function resize() {
-  width = window.innerWidth;
-  height = window.innerHeight;
-  canvas.width = width * devicePixelRatio;
-  canvas.height = height * devicePixelRatio;
-  canvas.style.width = width + 'px';
-  canvas.style.height = height + 'px';
-  ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
-}
-window.addEventListener('resize', resize);
-resize();
+setTimeout(() => canOpenPanel = true, 2000);
 
 window.addEventListener('keydown', e => {
   keys[e.key.toLowerCase()] = true;
-  if (e.code === 'Space') {
-    e.preventDefault();
-    switchVehicle();
-  }
+  if (e.code === 'Space') { e.preventDefault(); switchVehicle(); }
 });
 window.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
 
@@ -61,64 +202,107 @@ document.getElementById('switchMobile').addEventListener('click', switchVehicle)
 
 document.querySelectorAll('#mobileControls [data-dir]').forEach(btn => {
   const dir = btn.dataset.dir;
-  btn.addEventListener('touchstart', e => { e.preventDefault(); mobileDir[dir] = true; });
-  btn.addEventListener('touchend', e => { e.preventDefault(); mobileDir[dir] = false; });
-  btn.addEventListener('mousedown', () => mobileDir[dir] = true);
-  btn.addEventListener('mouseup', () => mobileDir[dir] = false);
-  btn.addEventListener('mouseleave', () => mobileDir[dir] = false);
+  ['touchstart', 'mousedown'].forEach(ev => btn.addEventListener(ev, e => { e.preventDefault(); mobileDir[dir] = true; }));
+  ['touchend', 'mouseup', 'mouseleave'].forEach(ev => btn.addEventListener(ev, () => mobileDir[dir] = false));
 });
 
 function setVehicle(type) {
-  player.vehicle = type;
+  currentVehicle = type;
+  car.visible = type === 'car';
+  boat.visible = type === 'boat';
   document.getElementById('btnCar').classList.toggle('active', type === 'car');
   document.getElementById('btnBoat').classList.toggle('active', type === 'boat');
+  if (type === 'car') {
+    car.position.copy(boat.position);
+    car.position.y = 0;
+  } else {
+    boat.position.copy(car.position);
+    boat.position.y = -1.2;
+  }
 }
 function switchVehicle() {
-  setVehicle(player.vehicle === 'car' ? 'boat' : 'car');
+  setVehicle(currentVehicle === 'car' ? 'boat' : 'car');
 }
 
-function isWater(x, y) {
-  if (y > 550 && y < 850 && x > 200 && x < 2000) return true;
-  if (Math.hypot(x - 1800, y - 300) < 220) return true;
-  if (Math.hypot(x - 500, y - 1200) < 280) return true;
-  if (y > 1200 && x > 900 && x < 1700) return true;
+function isWater(x, z) {
+  if (z > 15 && z < 55 && x > -15 && x < 55) return true;
+  if (Math.hypot(x - 35, z - 35) < 25) return true;
+  if (z < -30 && x > 10) return true;
   return false;
 }
 
-function update() {
-  let dx = 0, dy = 0;
-  if (keys['w'] || keys['arrowup'] || mobileDir.up) dy -= 1;
-  if (keys['s'] || keys['arrowdown'] || mobileDir.down) dy += 1;
-  if (keys['a'] || keys['arrowleft'] || mobileDir.left) dx -= 1;
-  if (keys['d'] || keys['arrowright'] || mobileDir.right) dx += 1;
+const contents = {
+  home: `<h2>KOUASSI KOFFI DEVIS AXEL HEROLDE</h2><p class="subtitle">BTS Informatique Développeur d'Applications (IDA) · 2026</p><p>Bienvenue dans mon univers 3D ! Conduis la voiture sur la terre et le bateau sur l'eau.</p><p>Approche les anneaux colorés pour découvrir mon profil, mes compétences et mes projets.</p>`,
+  about: `<h2>À propos de moi</h2><p class="subtitle">Jeune diplômé · Recherche de stage</p><p>Jeune diplômé titulaire d'un BTS en Informatique Développeur d'Applications (IDA) obtenu en 2026. Je suis actuellement à la recherche d'un stage pour acquérir une première expérience professionnelle.</p><p>Sérieux, motivé et désireux d'apprendre.</p><p><strong>Qualités :</strong> Sérieux • Ponctuel • Motivé • Dynamique • Apprenant rapide</p>`,
+  skills: `<h2>Compétences</h2><p class="subtitle">Techniques & IA</p><div class="skill-list"><span class="skill-item">HTML5 / CSS3 <small>Intermédiaire</small></span><span class="skill-item">JavaScript <small>Débutant</small></span><span class="skill-item">Bootstrap <small>Débutant</small></span><span class="skill-item">Git & GitHub <small>Débutant</small></span><span class="skill-item">MySQL <small>Intermédiaire</small></span><span class="skill-item">Responsive <small>Débutant</small></span></div><div class="skill-list" style="margin-top:0.8rem"><span class="skill-item">ChatGPT</span><span class="skill-item">Claude</span><span class="skill-item">Gemini</span><span class="skill-item">DeepSeek</span><span class="skill-item">GitHub Copilot</span></div>`,
+  projects: `<h2>Projets</h2><p class="subtitle">Académiques & personnels</p><p><strong>🛒 Davisshop</strong> – E-commerce React + Node + Prisma</p><p><strong>🚗 Site vente de voitures</strong> – HTML/CSS/JS/MySQL (BTS)</p><p><strong>🌐 Portfolio 3D Map</strong> – Ce portfolio interactif</p><p><strong>🇨🇮 Quiz-Ivoire</strong> – Quiz culture ivoirienne</p>`,
+  contact: `<h2>Contact</h2><p class="subtitle">Restons connectés</p><p>📧 heroldekouassi15@gmail.com</p><p>📞 +225 07 68 20 47 69</p><p>💻 GitHub : Davis7-design</p><p>📍 Yopougon, Abidjan, Côte d'Ivoire</p><p style="margin-top:1.2rem">Ouvert aux opportunités de stage en développement.</p>`,
+  cv: `<h2>Mon CV</h2><p class="subtitle">Télécharge mon curriculum vitae</p><a href="CV_KOUASSI_AXEL.pdf" download class="btn-cv" style="display:inline-flex;margin-top:1rem;padding:0.75rem 1.4rem;">📄 Télécharger le CV</a>`
+};
 
-  if (dx !== 0 || dy !== 0) {
-    const len = Math.hypot(dx, dy);
-    dx /= len; dy /= len;
-    player.angle = Math.atan2(dy, dx);
-    player.speed = Math.min(player.speed + 0.25, player.maxSpeed);
+function openPanel(id) {
+  const panel = document.getElementById('panel');
+  document.getElementById('panelContent').innerHTML = contents[id] || '';
+  panel.classList.remove('hidden');
+  requestAnimationFrame(() => panel.classList.add('open'));
+}
+function closePanel() {
+  const panel = document.getElementById('panel');
+  panel.classList.remove('open');
+  setTimeout(() => panel.classList.add('hidden'), 450);
+  currentZone = null;
+}
+document.getElementById('panelClose').addEventListener('click', closePanel);
+
+function getActiveVehicle() {
+  return currentVehicle === 'car' ? car : boat;
+}
+
+function update(dt) {
+  const veh = getActiveVehicle();
+  let forward = 0;
+  let turn = 0;
+
+  if (keys['w'] || keys['arrowup'] || mobileDir.up) forward += 1;
+  if (keys['s'] || keys['arrowdown'] || mobileDir.down) forward -= 1;
+  if (keys['a'] || keys['arrowleft'] || mobileDir.left) turn += 1;
+  if (keys['d'] || keys['arrowright'] || mobileDir.right) turn -= 1;
+
+  if (forward !== 0) {
+    speed = THREE.MathUtils.clamp(speed + forward * 0.025, -maxSpeed * 0.6, maxSpeed);
   } else {
-    player.speed *= 0.92;
-    if (player.speed < 0.1) player.speed = 0;
+    speed *= 0.92;
   }
 
-  const nextX = player.x + Math.cos(player.angle) * player.speed;
-  const nextY = player.y + Math.sin(player.angle) * player.speed;
+  if (Math.abs(speed) > 0.01) {
+    veh.rotation.y += turn * 0.04 * Math.sign(speed);
+  }
 
-  const onWater = isWater(nextX, nextY);
-  const allowed = (player.vehicle === 'boat' && onWater) || (player.vehicle === 'car' && !onWater);
+  const dx = Math.sin(veh.rotation.y) * speed;
+  const dz = Math.cos(veh.rotation.y) * speed;
+  const nextX = veh.position.x + dx;
+  const nextZ = veh.position.z + dz;
 
-  if (allowed || player.speed < 0.5) {
-    if (!allowed) player.speed *= 0.6;
-    player.x = Math.max(40, Math.min(MAP_W - 40, nextX));
-    player.y = Math.max(40, Math.min(MAP_H - 40, nextY));
+  const onWater = isWater(nextX, nextZ);
+  const allowed = (currentVehicle === 'boat' && onWater) || (currentVehicle === 'car' && !onWater);
+
+  if (allowed) {
+    veh.position.x = THREE.MathUtils.clamp(nextX, -90, 90);
+    veh.position.z = THREE.MathUtils.clamp(nextZ, -90, 90);
   } else {
-    player.speed *= 0.5;
+    speed *= 0.5;
+  }
+
+  if (currentVehicle === 'car') {
+    veh.position.y = 0;
+  } else {
+    veh.position.y = -1.2;
   }
 
   let found = null;
-  for (const z of zones) {
-    if (Math.hypot(player.x - z.x, player.y - z.y) < z.r - 10) {
+  for (const z of zonesData) {
+    const dist = Math.hypot(veh.position.x - z.x, veh.position.z - z.z);
+    if (dist < z.r - 1) {
       found = z;
       break;
     }
@@ -126,174 +310,37 @@ function update() {
   if (found && found !== currentZone && canOpenPanel) {
     currentZone = found;
     openPanel(found.id);
-  } else if (!found && currentZone) {
+  } else if (!found) {
     currentZone = null;
   }
+
+  const target = new THREE.Vector3(
+    veh.position.x - Math.sin(veh.rotation.y) * 18,
+    veh.position.y + 12,
+    veh.position.z - Math.cos(veh.rotation.y) * 18
+  );
+  camera.position.lerp(target, 0.06);
+  camera.lookAt(veh.position.x, veh.position.y + 1, veh.position.z);
+
+  water.position.y = -1.8 + Math.sin(Date.now() * 0.001) * 0.15;
 }
 
-function draw() {
-  const camX = player.x - width / 2;
-  const camY = player.y - height / 2;
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
 
-  ctx.save();
-  ctx.translate(-camX, -camY);
-
-  ctx.fillStyle = '#0a1520';
-  ctx.fillRect(camX - 100, camY - 100, width + 200, height + 200);
-
-  const tile = 40;
-  const startX = Math.floor(camX / tile) * tile;
-  const startY = Math.floor(camY / tile) * tile;
-  for (let x = startX; x < camX + width + tile; x += tile) {
-    for (let y = startY; y < camY + height + tile; y += tile) {
-      if (isWater(x + tile/2, y + tile/2)) {
-        ctx.fillStyle = `hsl(200, 70%, ${28 + Math.sin(x*0.01 + y*0.01)*4}%)`;
-      } else {
-        ctx.fillStyle = `hsl(140, 35%, ${22 + Math.sin(x*0.008)*3}%)`;
-      }
-      ctx.fillRect(x, y, tile + 1, tile + 1);
-    }
-  }
-
-  ctx.strokeStyle = 'rgba(0,240,255,0.04)';
-  ctx.lineWidth = 1;
-  for (let x = 0; x < MAP_W; x += 80) {
-    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, MAP_H); ctx.stroke();
-  }
-  for (let y = 0; y < MAP_H; y += 80) {
-    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(MAP_W, y); ctx.stroke();
-  }
-
-  for (const z of zones) {
-    const dist = Math.hypot(player.x - z.x, player.y - z.y);
-    const glow = dist < z.r + 40 ? 1 : 0.5;
-
-    ctx.beginPath();
-    ctx.arc(z.x, z.y, z.r + 15, 0, Math.PI * 2);
-    ctx.fillStyle = z.color + (glow > 0.8 ? '33' : '15');
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.arc(z.x, z.y, z.r, 0, Math.PI * 2);
-    ctx.strokeStyle = z.color;
-    ctx.lineWidth = 3;
-    ctx.globalAlpha = 0.7 + glow * 0.3;
-    ctx.stroke();
-    ctx.globalAlpha = 1;
-
-    ctx.font = 'bold 14px Orbitron, sans-serif';
-    ctx.fillStyle = z.color;
-    ctx.textAlign = 'center';
-    ctx.fillText(z.label, z.x, z.y + 5);
-  }
-
-  ctx.save();
-  ctx.translate(player.x, player.y);
-  ctx.rotate(player.angle);
-
-  if (player.vehicle === 'car') {
-    // Realistic car
-    ctx.fillStyle = '#00d4ff';
-    ctx.beginPath();
-    if (ctx.roundRect) ctx.roundRect(-26, -13, 52, 26, 6);
-    else { ctx.rect(-26, -13, 52, 26); }
-    ctx.fill();
-    // Cabin
-    ctx.fillStyle = '#006680';
-    ctx.beginPath();
-    if (ctx.roundRect) ctx.roundRect(-10, -10, 22, 20, 4);
-    else { ctx.rect(-10, -10, 22, 20); }
-    ctx.fill();
-    // Windows
-    ctx.fillStyle = '#b8f0ff';
-    ctx.fillRect(-7, -7, 8, 14);
-    ctx.fillRect(3, -7, 7, 14);
-    // Headlights
-    ctx.fillStyle = '#ffff99';
-    ctx.beginPath();
-    ctx.arc(24, -7, 4, 0, Math.PI*2);
-    ctx.arc(24, 7, 4, 0, Math.PI*2);
-    ctx.fill();
-    // Wheels
-    ctx.fillStyle = '#111';
-    ctx.beginPath();
-    ctx.arc(-14, -16, 6, 0, Math.PI*2);
-    ctx.arc(-14, 16, 6, 0, Math.PI*2);
-    ctx.arc(12, -16, 6, 0, Math.PI*2);
-    ctx.arc(12, 16, 6, 0, Math.PI*2);
-    ctx.fill();
-    // Rims
-    ctx.fillStyle = '#666';
-    ctx.beginPath();
-    ctx.arc(-14, -16, 2.5, 0, Math.PI*2);
-    ctx.arc(-14, 16, 2.5, 0, Math.PI*2);
-    ctx.arc(12, -16, 2.5, 0, Math.PI*2);
-    ctx.arc(12, 16, 2.5, 0, Math.PI*2);
-    ctx.fill();
-  } else {
-    // Realistic boat
-    ctx.fillStyle = '#ff5c2e';
-    ctx.beginPath();
-    ctx.moveTo(28, 0);
-    ctx.quadraticCurveTo(10, -18, -20, -12);
-    ctx.lineTo(-16, 0);
-    ctx.lineTo(-20, 12);
-    ctx.quadraticCurveTo(10, 18, 28, 0);
-    ctx.fill();
-    // Cabin
-    ctx.fillStyle = '#fff';
-    ctx.beginPath();
-    if (ctx.roundRect) ctx.roundRect(-8, -9, 16, 18, 3);
-    else { ctx.rect(-8, -9, 16, 18); }
-    ctx.fill();
-    // Window
-    ctx.fillStyle = '#88ccff';
-    ctx.fillRect(-5, -6, 10, 12);
-  }
-  ctx.restore();
-
-  ctx.beginPath();
-  ctx.arc(player.x, player.y, 42, 0, Math.PI * 2);
-  ctx.strokeStyle = player.vehicle === 'car' ? 'rgba(0,240,255,0.4)' : 'rgba(255,107,53,0.4)';
-  ctx.lineWidth = 3;
-  ctx.stroke();
-
-  ctx.restore();
-}
-
-const contents = {
-  home: `<h2>KOUASSI KOFFI DEVIS AXEL HEROLDE</h2><p class="subtitle">BTS Informatique Développeur d'Applications (IDA) · 2026</p><p>Bienvenue sur mon portfolio interactif ! Explore la map avec la voiture sur la terre et le bateau sur l'eau.</p><p>Approche-toi des zones colorées pour découvrir mon parcours, mes compétences et mes projets.</p>`,
-  about: `<h2>À propos de moi</h2><p class="subtitle">Jeune diplômé · Recherche de stage</p><p>Jeune diplômé titulaire d'un BTS en Informatique Développeur d'Applications (IDA) obtenu en 2026, je suis actuellement à la recherche d'un stage afin d'acquérir une première expérience professionnelle.</p><p>Sérieux, motivé et désireux d'apprendre, je souhaite intégrer une structure pour mettre en pratique mes connaissances et développer mes compétences techniques.</p><p><strong>Qualités :</strong> Sérieux • Ponctuel • Motivé • Discret • Dynamique • Apprenant rapide</p>`,
-  skills: `<h2>Compétences</h2><p class="subtitle">Techniques & Transversales</p><h3 style="color:#00f0ff;margin:1rem 0 0.5rem;font-size:1rem;">Techniques</h3><div class="skill-list"><span class="skill-item">HTML5 / CSS3 <small>Intermédiaire</small></span><span class="skill-item">JavaScript <small>Débutant</small></span><span class="skill-item">Bootstrap <small>Débutant</small></span><span class="skill-item">Git & GitHub <small>Débutant</small></span><span class="skill-item">MySQL <small>Intermédiaire</small></span><span class="skill-item">Responsive Design <small>Débutant</small></span></div><h3 style="color:#a855f7;margin:1.2rem 0 0.5rem;font-size:1rem;">IA & Outils</h3><div class="skill-list"><span class="skill-item">ChatGPT</span><span class="skill-item">Claude</span><span class="skill-item">Gemini</span><span class="skill-item">DeepSeek</span><span class="skill-item">GitHub Copilot</span><span class="skill-item">Perplexity</span></div>`,
-  projects: `<h2>Projets</h2><p class="subtitle">Projets académiques & personnels</p><p><strong>🛒 Davisshop</strong><br>Plateforme e-commerce (React + Node + Prisma)</p><p><strong>🚗 Site de vente de voitures</strong><br>HTML/CSS, JS, MySQL (projet BTS local)</p><p><strong>🌐 Portfolio Map Interactive</strong><br>Ce portfolio unique avec navigation véhicule</p><p><strong>🇨🇮 Quiz-Ivoire</strong><br>Quiz culture générale Côte d'Ivoire</p>`,
-  contact: `<h2>Contact</h2><p class="subtitle">Restons connectés</p><p>📧 heroldekouassi15@gmail.com</p><p>📞 +225 07 68 20 47 69</p><p>💻 GitHub : Davis7-design</p><p>📍 Yopougon, Abidjan, Côte d'Ivoire</p><p style="margin-top:1.5rem;">Je suis ouvert aux opportunités de stage en développement d'applications.</p>`,
-  cv: `<h2>Mon CV</h2><p class="subtitle">Télécharge mon curriculum vitae</p><p>Tu peux télécharger mon CV complet au format PDF.</p><a href="CV_KOUASSI_AXEL.pdf" download class="btn-cv" style="display:inline-flex;margin-top:1rem;padding:0.8rem 1.5rem;">📄 Télécharger le CV</a>`
-};
-
-function openPanel(id) {
-  const panel = document.getElementById('panel');
-  const content = document.getElementById('panelContent');
-  content.innerHTML = contents[id] || '<p>Zone inconnue</p>';
-  panel.classList.remove('hidden');
-  requestAnimationFrame(() => panel.classList.add('open'));
-}
-
-function closePanel() {
-  const panel = document.getElementById('panel');
-  panel.classList.remove('open');
-  setTimeout(() => panel.classList.add('hidden'), 450);
-  currentZone = null;
-}
-
-document.getElementById('panelClose').addEventListener('click', closePanel);
-
-function loop() {
-  update();
-  draw();
-  requestAnimationFrame(loop);
+let last = performance.now();
+function animate(now) {
+  const dt = Math.min((now - last) / 1000, 0.05);
+  last = now;
+  update(dt);
+  renderer.render(scene, camera);
+  requestAnimationFrame(animate);
 }
 
 window.addEventListener('load', () => {
-  setTimeout(() => document.getElementById('loader').classList.add('hidden'), 1000);
-  loop();
+  setTimeout(() => document.getElementById('loader').classList.add('hidden'), 1200);
+  animate(performance.now());
 });

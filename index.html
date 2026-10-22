@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AXEL | Portfolio 3D</title>
+  <meta name="description" content="Portfolio unique de KOUASSI KOFFI DEVIS AXEL HEROLDE - Développeur Junior Full-Stack" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Loader -->
+  <div id="loader">
+    <div class="loader-content">
+      <div class="loader-ring"></div>
+      <p>Chargement de l'univers...</p>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav id="navbar">
+    <div class="nav-logo">AXEL<span>.</span></div>
+    <ul class="nav-links">
+      <li><a href="#home" class="active">Accueil</a></li>
+      <li><a href="#about">À propos</a></li>
+      <li><a href="#skills">Compétences</a></li>
+      <li><a href="#projects">Projets</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Hero with 3D Map -->
+  <section id="home" class="hero">
+    <canvas id="map3d"></canvas>
+    <div class="hero-overlay">
+      <div class="hero-content">
+        <p class="hero-greeting">Bienvenue dans mon univers</p>
+        <h1 class="hero-name">KOUASSI KOFFI<br><span>DEVIS AXEL HEROLDE</span></h1>
+        <p class="hero-title">Développeur Junior Full-Stack · Étudiant en Informatique</p>
+        <p class="hero-tagline">Côte d'Ivoire 🇨🇮 · Passionné de nouvelles technologies</p>
+        <div class="hero-cta">
+          <a href="#projects" class="btn btn-primary">Explorer mes projets</a>
+          <a href="#contact" class="btn btn-secondary">Me contacter</a>
+        </div>
+        <p class="hero-hint">🖱️ Clique et déplace la map 3D · Molette pour zoomer</p>
+      </div>
+    </div>
+    <div class="scroll-indicator">
+      <span></span>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">01</span>
+        <h2>À propos de moi</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="about-grid">
+        <div class="about-text">
+          <p class="lead">
+            Jeune ivoirien passionné de nouvelles technologies, je suis un développeur junior et étudiant en informatique.
+          </p>
+          <p>
+            J’aime créer des expériences web modernes qui allient un design accrocheur et un code robuste. 
+            Que ce soit côté frontend avec des interfaces fluides et immersives, ou côté backend avec des API solides, 
+            je cherche toujours à repousser les limites et à apprendre quelque chose de nouveau chaque jour.
+          </p>
+          <p>
+            Mon objectif ? Construire des produits digitaux qui captivent, qui racontent une histoire, 
+            et qui apportent une vraie valeur. Prêt à collaborer sur des projets ambitieux.
+          </p>
+          <div class="about-stats">
+            <div class="stat">
+              <span class="stat-number">2+</span>
+              <span class="stat-label">Projets</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number">Full</span>
+              <span class="stat-label">Stack</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number">∞</span>
+              <span class="stat-label">Curiosité</span>
+            </div>
+          </div>
+        </div>
+        <div class="about-card">
+          <div class="card-glow"></div>
+          <h3>Actuellement</h3>
+          <ul>
+            <li>📚 Étudiant en informatique</li>
+            <li>💻 Développeur Full-Stack Junior</li>
+            <li>🚀 En train de monter en compétences</li>
+            <li>🎮 Fan de challenges techniques</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section id="skills" class="section section-dark">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">02</span>
+        <h2>Compétences</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="skills-grid">
+        <div class="skill-category">
+          <h3>Frontend</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">HTML5</span>
+            <span class="skill-tag">CSS3</span>
+            <span class="skill-tag">JavaScript</span>
+            <span class="skill-tag">TypeScript</span>
+            <span class="skill-tag">React</span>
+            <span class="skill-tag">Tailwind CSS</span>
+            <span class="skill-tag">Vite</span>
+            <span class="skill-tag">Zustand</span>
+            <span class="skill-tag">React Router</span>
+          </div>
+        </div>
+        <div class="skill-category">
+          <h3>Backend</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">Node.js</span>
+            <span class="skill-tag">Express</span>
+            <span class="skill-tag">Prisma</span>
+            <span class="skill-tag">REST API</span>
+            <span class="skill-tag">SQLite / PostgreSQL</span>
+            <span class="skill-tag">JWT Auth</span>
+            <span class="skill-tag">Middleware</span>
+          </div>
+        </div>
+        <div class="skill-category">
+          <h3>Outils & Autres</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">Git & GitHub</span>
+            <span class="skill-tag">VS Code</span>
+            <span class="skill-tag">Postman</span>
+            <span class="skill-tag">npm / yarn</span>
+            <span class="skill-tag">Responsive Design</span>
+            <span class="skill-tag">UI/UX Basics</span>
+            <span class="skill-tag">Three.js</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section id="projects" class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">03</span>
+        <h2>Projets</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="projects-grid">
+        <article class="project-card">
+          <div class="project-image">
+            <div class="project-placeholder">🛒</div>
+            <div class="project-overlay">
+              <a href="https://github.com/Davis7-design/Davisshop" target="_blank" rel="noopener" class="btn btn-small">Voir le code</a>
+            </div>
+          </div>
+          <div class="project-content">
+            <h3>Davisshop</h3>
+            <p class="project-type">E-commerce Full-Stack</p>
+            <p>Plateforme e-commerce complète avec React, TypeScript, Tailwind, Node.js, Express et Prisma. Gestion de produits, panier, authentification et interface moderne.</p>
+            <div class="project-tech">
+              <span>React</span>
+              <span>TypeScript</span>
+              <span>Node.js</span>
+              <span>Prisma</span>
+              <span>Tailwind</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <div class="project-image">
+            <div class="project-placeholder">🇨🇮</div>
+            <div class="project-overlay">
+              <a href="https://github.com/Davis7-design/Quiz-ivoire" target="_blank" rel="noopener" class="btn btn-small">Voir le code</a>
+            </div>
+          </div>
+          <div class="project-content">
+            <h3>Quiz-Ivoire</h3>
+            <p class="project-type">Quiz Culture Générale</p>
+            <p>Quiz interactif de culture générale centré sur la Côte d’Ivoire. Un projet fun pour tester ses connaissances sur le pays et partager la culture ivoirienne.</p>
+            <div class="project-tech">
+              <span>JavaScript</span>
+              <span>HTML/CSS</span>
+              <span>Culture</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="section section-dark">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">04</span>
+        <h2>Contact</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="contact-wrapper">
+        <div class="contact-text">
+          <h3>On collabore ?</h3>
+          <p>Que ce soit pour un projet, une opportunité ou juste discuter tech, je suis ouvert. Envoie-moi un message !</p>
+          <div class="contact-info">
+            <a href="mailto:heroldekouassi15@gmail.com" class="contact-item">
+              <span class="icon">✉️</span>
+              heroldekouassi15@gmail.com
+            </a>
+            <a href="https://github.com/Davis7-design" target="_blank" rel="noopener" class="contact-item">
+              <span class="icon">💻</span>
+              GitHub — Davis7-design
+            </a>
+            <a href="https://www.linkedin.com/in/koffi-devis-axel-herolde-kouassi-a7a440398" target="_blank" rel="noopener" class="contact-item">
+              <span class="icon">💼</span>
+              LinkedIn
+            </a>
+            <a href="https://www.snapchat.com/add/davis_k7" target="_blank" rel="noopener" class="contact-item">
+              <span class="icon">👻</span>
+              Snapchat — davis_k7
+            </a>
+          </div>
+        </div>
+        <form class="contact-form" id="contactForm">
+          <div class="form-group">
+            <input type="text" id="name" placeholder="Ton nom" required>
+          </div>
+          <div class="form-group">
+            <input type="email" id="email" placeholder="Ton email" required>
+          </div>
+          <div class="form-group">
+            <textarea id="message" rows="5" placeholder="Ton message..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full">Envoyer le message</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>© 2026 KOUASSI KOFFI DEVIS AXEL HEROLDE — Fait avec 💜 et un peu de magie 3D</p>
+      <p class="footer-note">Portfolio unique · Map 3D interactive</p>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

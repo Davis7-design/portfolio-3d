@@ -522,13 +522,6 @@ body {
   box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
 }
 
-.skill-tag small {
-  font-size: 0.65rem;
-  opacity: 0.7;
-  margin-left: 0.3rem;
-  font-weight: 400;
-}
-
 /* ===== PROJECTS ===== */
 .projects-grid {
   display: grid;

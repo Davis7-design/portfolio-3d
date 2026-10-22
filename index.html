@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AXEL | Portfolio 3D – BTS IDA | Recherche de stage</title>
+  <meta name="description" content="Portfolio de KOUASSI KOFFI DEVIS AXEL HEROLDE – BTS Informatique Développeur d'Applications (IDA) 2026. Recherche de stage à Abidjan." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Loader -->
+  <div id="loader">
+    <div class="loader-content">
+      <div class="loader-ring"></div>
+      <p>Chargement de l'univers...</p>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav id="navbar">
+    <div class="nav-logo">AXEL<span>.</span></div>
+    <ul class="nav-links">
+      <li><a href="#home" class="active">Accueil</a></li>
+      <li><a href="#about">À propos</a></li>
+      <li><a href="#skills">Compétences</a></li>
+      <li><a href="#projects">Projets</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Hero with 3D Map -->
+  <section id="home" class="hero">
+    <canvas id="map3d"></canvas>
+    <div class="hero-overlay">
+      <div class="hero-content">
+        <p class="hero-greeting">Bienvenue dans mon univers</p>
+        <h1 class="hero-name">KOUASSI KOFFI<br><span>DEVIS AXEL HEROLDE</span></h1>
+        <p class="hero-title">BTS Informatique Développeur d'Applications (IDA) · 2026</p>
+        <p class="hero-tagline">Recherche de stage · Yopougon, Abidjan 🇨🇮 · Passionné de tech & IA</p>
+        <div class="hero-cta">
+          <a href="#projects" class="btn btn-primary">Voir mes projets</a>
+          <a href="#contact" class="btn btn-secondary">Me contacter</a>
+        </div>
+        <p class="hero-hint">🖱️ Explore la map 3D · Molette pour zoomer · Clique & tourne</p>
+      </div>
+    </div>
+    <div class="scroll-indicator">
+      <span></span>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">01</span>
+        <h2>À propos de moi</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="about-grid">
+        <div class="about-text">
+          <p class="lead">
+            Jeune diplômé titulaire d’un BTS en Informatique Développeur d’Applications (IDA) obtenu en 2026.
+          </p>
+          <p>
+            Je suis actuellement à la recherche d’un stage afin d’acquérir une première expérience professionnelle. 
+            Sérieux, motivé et désireux d’apprendre, je souhaite intégrer une structure pour mettre en pratique mes connaissances, 
+            développer mes compétences techniques et évoluer dans le domaine de l’informatique.
+          </p>
+          <p>
+            À l’ère de l’IA, j’intègre quotidiennement des outils intelligents (ChatGPT, Claude, Gemini, GitHub Copilot…) 
+            pour booster ma productivité, apprendre plus vite et créer des solutions innovantes.
+          </p>
+          <div class="about-stats">
+            <div class="stat">
+              <span class="stat-number">BTS</span>
+              <span class="stat-label">IDA 2026</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number">Stage</span>
+              <span class="stat-label">En recherche</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number">∞</span>
+              <span class="stat-label">Motivation</span>
+            </div>
+          </div>
+        </div>
+        <div class="about-card">
+          <div class="card-glow"></div>
+          <h3>Actuellement</h3>
+          <ul>
+            <li>🎓 Diplômé BTS IDA – 2026</li>
+            <li>📍 Yopougon, Abidjan</li>
+            <li>🔍 Recherche active de stage</li>
+            <li>🤖 Utilisateur intensif d’outils IA</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section id="skills" class="section section-dark">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">02</span>
+        <h2>Compétences</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="skills-grid">
+        <div class="skill-category">
+          <h3>Frontend</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">HTML5 / CSS3 <small>Intermédiaire</small></span>
+            <span class="skill-tag">JavaScript <small>Débutant</small></span>
+            <span class="skill-tag">Bootstrap <small>Débutant</small></span>
+            <span class="skill-tag">Responsive Design <small>Débutant</small></span>
+          </div>
+        </div>
+        <div class="skill-category">
+          <h3>Bases de données & Outils</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">MySQL <small>Intermédiaire</small></span>
+            <span class="skill-tag">Git & GitHub <small>Débutant</small></span>
+            <span class="skill-tag">Three.js</span>
+          </div>
+        </div>
+        <div class="skill-category">
+          <h3>IA & Productivité</h3>
+          <div class="skill-tags">
+            <span class="skill-tag">ChatGPT</span>
+            <span class="skill-tag">Claude</span>
+            <span class="skill-tag">Gemini</span>
+            <span class="skill-tag">GitHub Copilot</span>
+            <span class="skill-tag">DeepSeek</span>
+            <span class="skill-tag">Perplexity</span>
+            <span class="skill-tag">Notion AI</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section id="projects" class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">03</span>
+        <h2>Projets</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="projects-grid">
+        <article class="project-card">
+          <div class="project-image">
+            <div class="project-placeholder">🛒</div>
+            <div class="project-overlay">
+              <a href="https://github.com/Davis7-design/Davisshop" target="_blank" rel="noopener" class="btn btn-small">Voir le code</a>
+            </div>
+          </div>
+          <div class="project-content">
+            <h3>Davisshop</h3>
+            <p class="project-type">E-commerce Full-Stack</p>
+            <p>Plateforme e-commerce avec catalogue, panier et gestion de produits. Projet développé avec des technologies modernes (React + backend).</p>
+            <div class="project-tech">
+              <span>React</span>
+              <span>TypeScript</span>
+              <span>Node.js</span>
+              <span>Prisma</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <div class="project-image">
+            <div class="project-placeholder">🚗</div>
+            <div class="project-overlay">
+              <span class="btn btn-small" style="opacity:0.7;cursor:default;">Projet local</span>
+            </div>
+          </div>
+          <div class="project-content">
+            <h3>Site de vente de voitures</h3>
+            <p class="project-type">Projet académique BTS</p>
+            <p>Site de vente de voitures développé en HTML/CSS, JavaScript et MySQL (environnement local) dans le cadre du BTS IDA.</p>
+            <div class="project-tech">
+              <span>HTML/CSS</span>
+              <span>JavaScript</span>
+              <span>MySQL</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <div class="project-image">
+            <div class="project-placeholder">🌐</div>
+            <div class="project-overlay">
+              <a href="https://github.com/Davis7-design/portfolio-3d" target="_blank" rel="noopener" class="btn btn-small">Voir le code</a>
+            </div>
+          </div>
+          <div class="project-content">
+            <h3>Portfolio 3D</h3>
+            <p class="project-type">Portfolio personnel interactif</p>
+            <p>Ce portfolio unique avec map 3D interactive (Three.js). Design sombre, néon et immersif pour sortir du lot.</p>
+            <div class="project-tech">
+              <span>HTML/CSS/JS</span>
+              <span>Three.js</span>
+              <span>Design</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="section section-dark">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">04</span>
+        <h2>Contact</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="contact-wrapper">
+        <div class="contact-text">
+          <h3>On collabore ?</h3>
+          <p>Que ce soit pour un stage, un projet ou juste discuter tech, je suis ouvert. Envoie-moi un message !</p>
+          <div class="contact-info">
+            <a href="mailto:heroldekouassi15@gmail.com" class="contact-item">
+              <span class="icon">✉️</span>
+              heroldekouassi15@gmail.com
+            </a>
+            <a href="tel:+2250768204769" class="contact-item">
+              <span class="icon">📞</span>
+              +225 07 68 20 47 69
+            </a>
+            <a href="https://github.com/Davis7-design" target="_blank" rel="noopener" class="contact-item">
+              <span class="icon">💻</span>
+              GitHub — Davis7-design
+            </a>
+            <a href="https://www.linkedin.com/in/koffi-devis-axel-herolde-kouassi-a7a440398" target="_blank" rel="noopener" class="contact-item">
+              <span class="icon">💼</span>
+              LinkedIn
+            </a>
+            <a href="https://www.snapchat.com/add/davis_k7" target="_blank" rel="noopener" class="contact-item">
+              <span class="icon">👻</span>
+              Snapchat — davis_k7
+            </a>
+          </div>
+        </div>
+        <form class="contact-form" id="contactForm">
+          <div class="form-group">
+            <input type="text" id="name" placeholder="Ton nom" required>
+          </div>
+          <div class="form-group">
+            <input type="email" id="email" placeholder="Ton email" required>
+          </div>
+          <div class="form-group">
+            <textarea id="message" rows="5" placeholder="Ton message..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full">Envoyer le message</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>© 2026 KOUASSI KOFFI DEVIS AXEL HEROLDE — Fait avec 💜 et un peu de magie 3D</p>
+      <p class="footer-note">Portfolio unique · Map 3D interactive · Recherche de stage</p>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

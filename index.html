@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>AXEL | Portfolio Map Interactive</title>
+  <meta name="description" content="Portfolio interactif de KOUASSI KOFFI DEVIS AXEL HEROLDE – BTS IDA 2026. Explore la map avec voiture et bateau." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="loader">
+    <div class="loader-content">
+      <div class="loader-ring"></div>
+      <p>Chargement de la map...</p>
+    </div>
+  </div>
+
+  <header id="topbar">
+    <div class="logo">AXEL<span>.</span></div>
+    <div class="vehicle-switch">
+      <button id="btnCar" class="veh-btn active" title="Voiture">🚗</button>
+      <button id="btnBoat" class="veh-btn" title="Bateau">🚤</button>
+    </div>
+    <div class="top-actions">
+      <a href="CV_KOUASSI_AXEL.pdf" download class="btn-cv">📄 Télécharger CV</a>
+    </div>
+  </header>
+
+  <canvas id="mapCanvas"></canvas>
+
+  <div id="hud">
+    <div class="hud-hint">
+      <span>WASD / Flèches pour bouger</span>
+      <span>Espace pour changer de véhicule</span>
+      <span>Approche-toi des zones pour les explorer</span>
+    </div>
+  </div>
+
+  <div id="panel" class="panel hidden">
+    <button class="panel-close" id="panelClose">✕</button>
+    <div class="panel-inner" id="panelContent"></div>
+  </div>
+
+  <div id="mobileControls">
+    <div class="dpad">
+      <button data-dir="up">▲</button>
+      <div class="mid">
+        <button data-dir="left">◀</button>
+        <button data-dir="right">▶</button>
+      </div>
+      <button data-dir="down">▼</button>
+    </div>
+    <button id="switchMobile" class="switch-mobile">🚗 / 🚤</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

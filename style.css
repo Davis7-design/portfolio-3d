@@ -286,7 +286,7 @@ body {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary), var(--primary-dim);
+  background: linear-gradient(135deg, var(--primary), var(--primary-dim));
   color: #0a0a0f;
   box-shadow: var(--glow);
 }
